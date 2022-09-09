@@ -1,7 +1,7 @@
 package com.example.physiocounter;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,16 +9,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 public class SecondFragment extends Fragment {
     TextView setCounterText;
     Button startbtn, stopbtn, restartbtn;
     Chronometer simpleChronometer;
+    Boolean isSet;
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -39,7 +39,7 @@ public class SecondFragment extends Fragment {
 //        });
 
         Bundle bundle = this.getArguments();
-        CharSequence totalSetCount= bundle.getCharSequence("totalSetCount");
+        CharSequence totalSetCount = bundle.getCharSequence("totalSetCount");
         CharSequence restTimeLabel = bundle.getCharSequence("restTime");
         CharSequence countsPerSetLabel = bundle.getCharSequence("countsPerSet");
         CharSequence countDurationLabel = bundle.getCharSequence("countDuration");
@@ -50,6 +50,7 @@ public class SecondFragment extends Fragment {
         stopbtn = (Button) view.findViewById(R.id.stopButton);
         restartbtn = (Button) view.findViewById(R.id.restartButton);
         setCounterText = (TextView) view.findViewById(R.id.setCounterText);
+        isSet = true;
         startbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,23 +87,38 @@ public class SecondFragment extends Fragment {
         });
 
         simpleChronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
-            int counter = 1;
+            int setCounter = 1;
+
             @Override
             public void onChronometerTick(Chronometer chronometer) {
-                if (SystemClock.elapsedRealtime() - chronometer.getBase() > (Integer.parseInt(countsPerSetLabel.toString()) * 1000)) {
+                if ((isSet && SystemClock.elapsedRealtime() - chronometer.getBase() > (Integer.parseInt(countsPerSetLabel.toString()) * 1000)) ||
+                        SystemClock.elapsedRealtime() - chronometer.getBase() > (Integer.parseInt(restTimeLabel.toString()) * 1000)) {
+                    // new AlertDialog.Builder(getContext()).setMessage("isSet : " + isSet).show();
+                    isSet = !isSet;
                     chronometer.setBase(SystemClock.elapsedRealtime());
-                    counter++;
-                    setCounterText.setText("Set: " + counter);
-                    if(counter > Integer.parseInt(totalSetCount.toString())){
+                    if(isSet){
+                        setCounter++;
+                    }
+
+                    if(isSet) {
+                        setCounterText.setText("Set: " + setCounter);
+                    } else {
+                        setCounterText.setText("You should now Rest");
+                    }
+
+                    if (setCounter > Integer.parseInt(totalSetCount.toString())) {
                         chronometer.stop();
                         setCounterText.setText(" Mission Completed !!!");
                         startbtn.setEnabled(false);
                         stopbtn.setEnabled(false);
                         restartbtn.setEnabled(false);
                     }
-                }
-                else{
-                    setCounterText.setText("Set: " + counter);
+                } else {
+                    if(isSet) {
+                        setCounterText.setText("Set: " + setCounter);
+                    } else {
+                        setCounterText.setText("You should now Rest");
+                    }
 
                 }
             }
