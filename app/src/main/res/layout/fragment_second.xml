@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,8 +13,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:text="Set: "
-        android:textColor="#FF0000"
-        android:textSize="20dp"
+        android:textColor="#000"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <Chronometer
@@ -25,8 +26,20 @@
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:padding="10dp"
-        android:textColor="#f00"
-        android:textSize="30dp"
+        android:textColor="#000"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/subText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:text=""
+        android:textColor="#000"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <Button
@@ -35,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/simpleChronometer"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="90dp"
         android:text="start" />
 
     <Button
@@ -44,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/startButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="42dp"
         android:text="Pause" />
 
     <Button
@@ -53,7 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/stopButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="54dp"
         android:text="restart" />
 
 </RelativeLayout>

@@ -1,6 +1,8 @@
 package com.example.physiocounter;
 
 import android.app.AlertDialog;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
@@ -14,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 public class SecondFragment extends Fragment {
-    TextView setCounterText;
+    TextView setCounterText, subText;
     Button startbtn, stopbtn, restartbtn;
     Chronometer simpleChronometer;
     Boolean isSet;
@@ -50,6 +52,7 @@ public class SecondFragment extends Fragment {
         stopbtn = (Button) view.findViewById(R.id.stopButton);
         restartbtn = (Button) view.findViewById(R.id.restartButton);
         setCounterText = (TextView) view.findViewById(R.id.setCounterText);
+        subText = (TextView) view.findViewById(R.id.subText);
         isSet = true;
         startbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +97,7 @@ public class SecondFragment extends Fragment {
                 if ((isSet && SystemClock.elapsedRealtime() - chronometer.getBase() > (Integer.parseInt(countsPerSetLabel.toString()) * 1000)) ||
                         SystemClock.elapsedRealtime() - chronometer.getBase() > (Integer.parseInt(restTimeLabel.toString()) * 1000)) {
                     // new AlertDialog.Builder(getContext()).setMessage("isSet : " + isSet).show();
+                    System.out.println("Time is: " + (SystemClock.elapsedRealtime() - chronometer.getBase()));
                     isSet = !isSet;
                     chronometer.setBase(SystemClock.elapsedRealtime());
                     if(isSet){
@@ -114,15 +118,33 @@ public class SecondFragment extends Fragment {
                         restartbtn.setEnabled(false);
                     }
                 } else {
+                    System.out.println("Time Now is: " + (SystemClock.elapsedRealtime() - chronometer.getBase()));
+
+
+                    if (isSet) {
+                        int countsRemaining = (int)(Integer.parseInt(countsPerSetLabel.toString()) * 1000 - (SystemClock.elapsedRealtime() - chronometer.getBase())) / 1000;
+                        if(countsRemaining < 3) {
+                            subText.setTextColor(Color.parseColor("#0d976f"));
+                            subText.setText("(Rest coming up in : " + countsRemaining + ")");
+                        } else {
+                            subText.setText("");
+                        }
+                    } else {
+                        int countsRemaining = (int)(Integer.parseInt(restTimeLabel.toString()) * 1000 - (SystemClock.elapsedRealtime() - chronometer.getBase())) / 1000;
+                        if(countsRemaining < 3) {
+                            subText.setTextColor(Color.parseColor("#ddbb00"));
+                            subText.setText("(Begun again in : " + countsRemaining + ")");
+                        } else {
+                            subText.setText("");
+                        }
+                    }
                     if(isSet) {
                         setCounterText.setText("Set: " + setCounter);
                     } else {
                         setCounterText.setText("You should now Rest");
                     }
-
                 }
             }
-
         });
     }
 }
